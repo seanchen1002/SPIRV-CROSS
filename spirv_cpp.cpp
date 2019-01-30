@@ -339,8 +339,8 @@ string CompilerCPP::compile()
 		// Move constructor for this type is broken on GCC 4.9 ...
 		buffer = unique_ptr<ostringstream>(new ostringstream());
 
-		emit_header();
-		emit_resources();
+		//emit_header();
+		//emit_resources();
 
 		emit_function(get<SPIRFunction>(ir.default_entry_point), Bitset());
 
@@ -348,15 +348,15 @@ string CompilerCPP::compile()
 	} while (force_recompile);
 
 	// Match opening scope of emit_header().
-	end_scope_decl();
+	// end_scope_decl();
 	// namespace
-	end_scope();
+	//end_scope();
 
 	// Emit C entry points
-	emit_c_linkage();
+	// emit_c_linkage();
 
 	// Entry point in CPP is always main() for the time being.
-	get_entry_point().name = "main";
+	//get_entry_point().name = "main";
 
 	return buffer->str();
 }
@@ -407,13 +407,17 @@ void CompilerCPP::emit_function_prototype(SPIRFunction &func, const Bitset &)
 	string decl;
 
 	auto &type = get<SPIRType>(func.return_type);
-	decl += "inline ";
+	if (func.self == ir.default_entry_point)
+	{
+		decl += "__kernel ";
+	}
+
 	decl += type_to_glsl(type);
 	decl += " ";
 
 	if (func.self == ir.default_entry_point)
 	{
-		decl += "main";
+		decl += to_name(func.self);
 		processing_entry_point = true;
 	}
 	else
@@ -507,6 +511,8 @@ void CompilerCPP::emit_header()
 		begin_scope();
 		break;
 
+	case ExecutionModelKernel:
+		break;
 	default:
 		SPIRV_CROSS_THROW("Unsupported execution model.");
 	}
@@ -544,6 +550,8 @@ void CompilerCPP::emit_header()
 		resource_type = "TessEvaluationResources";
 		break;
 
+	case ExecutionModelKernel:
+		break;
 	default:
 		SPIRV_CROSS_THROW("Unsupported execution model.");
 	}

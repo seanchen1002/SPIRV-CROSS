@@ -42,8 +42,8 @@ namespace spirv_cross
 #ifndef _MSC_VER
 [[noreturn]]
 #endif
-inline void
-report_and_abort(const std::string &msg)
+    inline void
+    report_and_abort(const std::string &msg)
 {
 #ifdef NDEBUG
 	(void)msg;
@@ -486,7 +486,8 @@ struct SPIRExtension : IVariant
 		SPV_AMD_shader_ballot,
 		SPV_AMD_shader_explicit_vertex_parameter,
 		SPV_AMD_shader_trinary_minmax,
-		SPV_AMD_gcn_shader
+		SPV_AMD_gcn_shader,
+		SPV_OPENCL_STD
 	};
 
 	SPIRExtension(Extension ext_)

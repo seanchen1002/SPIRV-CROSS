@@ -87,7 +87,7 @@ public:
 		bool es = false;
 		bool known = false;
 		bool hlsl = false;
-
+		bool opencl = false;
 		Source() = default;
 	};
 

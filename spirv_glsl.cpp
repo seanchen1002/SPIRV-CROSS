@@ -3337,7 +3337,9 @@ string CompilerGLSL::constant_expression_vector(const SPIRConstant &c, uint32_t 
 			}
 		}
 		break;
-
+	case SPIRType::Char:
+	case SPIRType::SByte:
+	case SPIRType::UByte:
 	case SPIRType::Int:
 		if (splat)
 			res += convert_to_string(c.scalar_i32(vector, 0));
@@ -6741,6 +6743,7 @@ void CompilerGLSL::emit_instruction(const Instruction &instruction)
 	case OpInBoundsAccessChain:
 	case OpAccessChain:
 	case OpPtrAccessChain:
+	case OpInBoundsPtrAccessChain:
 	{
 		auto *var = maybe_get<SPIRVariable>(ops[2]);
 		if (var)
@@ -6749,7 +6752,7 @@ void CompilerGLSL::emit_instruction(const Instruction &instruction)
 		// If the base is immutable, the access chain pointer must also be.
 		// If an expression is mutable and forwardable, we speculate that it is immutable.
 		AccessChainMeta meta;
-		bool ptr_chain = opcode == OpPtrAccessChain;
+		bool ptr_chain = opcode == OpPtrAccessChain || opcode == OpInBoundsPtrAccessChain;
 		auto e = access_chain(ops[2], &ops[3], length - 3, get<SPIRType>(ops[0]), &meta, ptr_chain);
 
 		auto &expr = set<SPIRExpression>(ops[1], move(e), ops[0], should_forward(ops[2]));
@@ -7435,7 +7438,7 @@ void CompilerGLSL::emit_instruction(const Instruction &instruction)
 	case OpBitwiseXor:
 	{
 		auto type = get<SPIRType>(ops[0]).basetype;
-		GLSL_BOP_CAST(^, type);
+		GLSL_BOP_CAST (^, type);
 		break;
 	}
 

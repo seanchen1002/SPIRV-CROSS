@@ -11,6 +11,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+set(CMAKE_C_COMPILER "/curr/youxiang/WORK/gcc/install_gcc/bin/gcc")
+set(CMAKE_CXX_COMPILER "/curr/youxiang/WORK/gcc/install_gcc/bin/g++")
+
 
 cmake_minimum_required(VERSION 2.8)
 project(SPIRV-Cross)

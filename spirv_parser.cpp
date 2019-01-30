@@ -195,6 +195,14 @@ void Parser::parse(const Instruction &instruction)
 			ir.source.hlsl = true;
 			break;
 
+		case SourceLanguageOpenCL_C:
+			ir.source.es = false;
+			ir.source.version = ops[1];
+			ir.source.known = true;
+			ir.source.hlsl = false;
+			ir.source.opencl = true;
+			break;
+
 		default:
 			ir.source.known = false;
 			break;
@@ -212,9 +220,9 @@ void Parser::parse(const Instruction &instruction)
 
 	case OpCapability:
 	{
-		uint32_t cap = ops[0];
-		if (cap == CapabilityKernel)
-			SPIRV_CROSS_THROW("Kernel capability not supported.");
+		//uint32_t cap = ops[0];
+		//if (cap == CapabilityKernel)
+		//SPIRV_CROSS_THROW("Kernel capability not supported.");
 
 		ir.declared_capabilities.push_back(static_cast<Capability>(ops[0]));
 		break;
@@ -241,6 +249,8 @@ void Parser::parse(const Instruction &instruction)
 			set<SPIRExtension>(id, SPIRExtension::SPV_AMD_shader_trinary_minmax);
 		else if (ext == "SPV_AMD_gcn_shader")
 			set<SPIRExtension>(id, SPIRExtension::SPV_AMD_gcn_shader);
+		else if (ext == "OpenCL.std")
+			set<SPIRExtension>(id, SPIRExtension::SPV_OPENCL_STD);
 		else
 			set<SPIRExtension>(id, SPIRExtension::Unsupported);
 
